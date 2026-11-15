@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>Painel do barbeiro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="icon" href="logo.jpg">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -14,7 +14,7 @@
 <header class="simple"><img class="logo" src="logo.jpg" alt="Barber Shop" width="96" height="96"><div><h1>Painel do barbeiro</h1><p id="quem"></p></div></header>
 <main class="simple">
   <section id="login">
-    <input id="em" type="email" placeholder="E-mail" autocomplete="username">
+    <input id="em" type="text" placeholder="Usuário (ex.: gustavo)" autocomplete="username" autocapitalize="none" autocorrect="off">
     <input id="pw" type="password" placeholder="Senha" autocomplete="current-password">
     <button class="btn" id="entrar">Entrar</button>
   </section>
@@ -38,7 +38,7 @@ async function sessao() {
   const {data: {session}} = await sb.auth.getSession();
   $('login').classList.toggle('hide', !!session); $('painel').classList.toggle('hide', !session);
   if (!session) return;
-  const {data: b} = await sb.from('barbers').select('name').eq('user_id', session.user.id).maybeSingle();
+  const {data: bs} = await sb.rpc('my_barber'); const b = (bs || [])[0];
   $('quem').textContent = b ? `Olá, ${b.name}` : 'Esta conta não está ligada a nenhum barbeiro.';
   carrega();
   if (!canal) canal = sb.channel('ag').on('postgres_changes', {event:'*', schema:'public', table:'appointments'}, carrega).subscribe();
@@ -68,7 +68,9 @@ $('lista').onclick = async e => {
   await sb.from('appointments').update({status: b.dataset.s}).eq('id', b.dataset.id); carrega();
 };
 $('entrar').onclick = async () => {
-  const {error} = await sb.auth.signInWithPassword({email: $('em').value.trim(), password: $('pw').value});
+  let u = $('em').value.trim().toLowerCase();
+  if (!u.includes('@') && C.ADMIN_EMAIL_BASE) { const [l, d] = C.ADMIN_EMAIL_BASE.split('@'); u = `${l}+${u}@${d}`; }
+  const {error} = await sb.auth.signInWithPassword({email: u, password: $('pw').value});
   $('msg').innerHTML = error ? '<div class="msg err">E-mail ou senha incorretos.</div>' : ''; if (!error) sessao();
 };
 $('sair').onclick = async () => { await sb.auth.signOut(); location.reload(); };

@@ -7,6 +7,26 @@
 
 > Já rodou o `schema.sql` antes? Rode também `supabase/update_v2.sql` (necessário para o novo agendamento com calendário).
 
+## ATUALIZAÇÃO V3 (faça nesta ordem)
+1. **Banco:** SQL Editor → cole `supabase/update_v3.sql` inteiro → Run. (Cria Gustavo, Dudu e Breno, os serviços e as regras do painel. Apaga os agendamentos de teste.)
+2. **Painel dos barbeiros:** Authentication → Users → *Add user → Create new user*, marcando *Auto Confirm User*, três vezes, com o SEU e-mail e um `+nome`:
+   `seuemail+gustavo@gmail.com`, `seuemail+dudu@gmail.com`, `seuemail+breno@gmail.com` (cada um com a senha que quiser, mínimo 6 caracteres).
+   Depois, **desative o cadastro aberto** (Authentication → Sign In / Providers → "Allow new users to sign up" desligado).
+   No `config.js`, troque `SEUEMAIL@gmail.com` pelo seu e-mail. Em `/admin.html` o login é só o nome: `gustavo` + a senha.
+3. **Telegram (sem terminal):**
+   - **Revogue o token antigo:** @BotFather → `/revoke` → escolha o bot → copie o token novo.
+   - Supabase → **Edge Functions → Deploy a new function → Via Editor**. Nome: `notify-telegram`. Apague o exemplo e cole o conteúdo de `supabase/functions/notify-telegram/index.ts`. Deploy.
+   - Nas configurações da função, **desligue "Verify JWT"**.
+   - Edge Functions → **Secrets** → adicione `TELEGRAM_BOT_TOKEN` = o token novo.
+   - **chat_id:** o jeito mais fácil é um grupo "Agenda" com os 3 barbeiros + o bot. Mande uma mensagem no grupo e abra `https://api.telegram.org/botSEU_TOKEN/getUpdates` no navegador; copie o `chat` → `id` (número negativo). Em **Table Editor → barbers**, cole esse número em `telegram_chat_id` dos três.
+   - Não precisa mais criar Database Webhook: o site avisa a função sozinho.
+   - Não chegou? Edge Functions → notify-telegram → **Logs** mostra o motivo.
+
+## 0. Conteúdo e fotos do site
+- `site.js`: WhatsApp, Instagram, endereço, horários, texto "sobre" e fotos. É o único arquivo que você edita para personalizar o site.
+- Fotos: copie as imagens para a pasta do projeto e escreva o nome em `FOTOS` (hero, sobre, serviços, galeria). Sem foto, o site usa o visual padrão; a galeria só aparece quando você coloca imagens.
+- `config.js`: **cole aqui a URL e a chave anon do Supabase** (se ficarem como "SEU-PROJETO", o site não carrega serviços nem barbeiros).
+
 ## 1. Supabase
 1. Crie o projeto em supabase.com.
 2. **SQL Editor** → cole `supabase/schema.sql` → Run. (Troque os serviços/barbeiros de exemplo depois em *Table Editor*.)

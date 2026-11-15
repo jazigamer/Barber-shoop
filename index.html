@@ -4,65 +4,97 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Barber Shop</title>
+<meta name="description" content="Barbearia com agendamento online. Escolha o dia, o horário e o seu barbeiro.">
 <link rel="icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script>document.documentElement.className='js'</script>
 </head>
 <body>
-<div class="top"><div class="wrap">
-  <img class="logo" src="logo.jpg" alt="Barber Shop" width="52" height="52">
-  <nav><a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#como">Sobre</a><a href="#contato">Contato</a></nav>
-</div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol><symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0116 0z"/><circle cx="12" cy="10" r="3"/></symbol><symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8.1 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z"/></symbol><symbol id="i-insta" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.4A4 4 0 1112.6 8 4 4 0 0116 11.4zM17.5 6.5h.01"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 11.5a8.4 8.4 0 01-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1121 11.5z"/></symbol><symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></symbol><symbol id="i-left" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></symbol><symbol id="i-right" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></symbol><symbol id="i-razor" viewBox="0 0 24 24"><path d="M3 21l9-9"/><path d="M12 12l7.5-7.5a2.1 2.1 0 013 3L15 15z"/></symbol><symbol id="i-comb" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="5" rx="1.5"/><path d="M5 12v6M9 12v6M13 12v6M17 12v6M21 12v6"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></symbol></svg>
+<header class="top" id="topo"><div class="wrap">
+  <a href="#inicio" aria-label="Início"><img class="logo" src="logo.jpg" alt="Barber Shop" width="50" height="50"></a>
+  <nav><a href="#servicos">Serviços</a><a href="#galeria" id="n-gal" class="hide">Galeria</a><a href="#sobre">Sobre</a><a href="#contato">Contato</a></nav>
+  <button class="btn" data-abrir><svg class="ic"><use href="#i-calendar"/></svg>Agendar</button>
+</div></header>
 
-<section class="hero" id="inicio"><div class="wrap">
-  <div class="eyebrow" id="nome">Barber Shop</div>
-  <h1>Seu estilo,<em>nosso foco.</em></h1>
-  <p>Mais que um corte, é uma experiência. Aqui o seu visual é tratado com respeito e cuidado.</p>
-  <button class="btn" style="max-width:320px;margin-bottom:28px" data-abrir>📅 Agendar agora →</button>
-  <div class="feats">
-    <div><i>✂️</i><span><b>Cortes</b>Modernos</span></div>
-    <div><i>🧔</i><span><b>Barba</b>Raspada e modelada</span></div>
-    <div><i>⭐</i><span><b>Atendimento</b>Personalizado</span></div>
+<section class="hero" id="inicio"><img class="art" src="logo.jpg" alt="" aria-hidden="true"><div class="pole" aria-hidden="true"></div><div class="wrap">
+  <div class="eyebrow rv">Barbearia tradicional</div>
+  <h1 class="rv">Seu estilo,<br><span>nosso foco.</span></h1>
+  <p class="rv">Mais que um corte, uma experiência. Atendimento com hora marcada, precisão em cada detalhe e o seu visual tratado com respeito.</p>
+  <div class="cta rv">
+    <button class="btn auto" data-abrir>Agendar horário<svg class="ic"><use href="#i-arrow"/></svg></button>
+    <a class="btn auto line" href="#servicos">Ver serviços</a>
   </div>
+  <div class="stats rv"><div><b>Hora marcada</b><span>sem fila de espera</span></div><div><b>Online</b><span>agende em segundos</span></div><div><b id="st-b">3</b><span>barbeiros</span></div></div>
 </div></section>
 
-<div class="wrap sec" id="servicos">
-  <div class="eyebrow">Nossos serviços</div>
-  <h2>Tudo o que você precisa para o seu visual</h2>
+<div class="wrap"><div class="strip rv">
+  <div><span class="sic"><svg class="ic"><use href="#i-calendar"/></svg></span><p><b>Agende online</b>Escolha dia e horário em poucos toques.</p></div>
+  <div><span class="sic"><svg class="ic"><use href="#i-user"/></svg></span><p><b>Escolha seu barbeiro</b>Veja quem está livre no seu horário.</p></div>
+  <div><span class="sic"><svg class="ic"><use href="#i-clock"/></svg></span><p><b>Atendimento ágil</b>Corte em cerca de 30 a 40 minutos.</p></div>
+</div></div>
+
+<section class="wrap sec" id="servicos">
+  <div class="eyebrow rv">Serviços</div>
+  <h2 class="rv">Tudo para o seu visual</h2>
   <div class="cards" id="cards"></div>
-</div>
+</section>
 
-<div class="wrap sec" id="como">
-  <div class="eyebrow">Como funciona</div>
-  <h2>Agende em poucos passos</h2>
-  <div class="steps">
-    <div><em>1</em><p style="margin:0"><b>Clique em agendar</b><span>Escolha o serviço e o dia no calendário.</span></p></div>
-    <div><em>2</em><p style="margin:0"><b>Escolha o horário</b><span>Depois, o barbeiro que estiver livre.</span></p></div>
-    <div><em>3</em><p style="margin:0"><b>Pronto!</b><span>O barbeiro é avisado e é só vir.</span></p></div>
+<section class="wrap sec hide" id="galeria">
+  <div class="eyebrow rv">Galeria</div>
+  <h2 class="rv">Nossos trabalhos</h2>
+  <div class="gal" id="gal"></div>
+</section>
+
+<section class="wrap sec" id="sobre">
+  <div class="sobre">
+    <div>
+      <div class="eyebrow rv">A barbearia</div>
+      <h2 class="rv">Tradição com precisão</h2>
+      <p class="rv" id="sobre-t"></p>
+      <div class="eyebrow rv" style="margin-bottom:14px">Profissionais</div>
+      <div class="team rv" id="team"></div>
+    </div>
+    <div class="foto rv" id="sobre-f" role="img" aria-label="Interior da barbearia"></div>
   </div>
-</div>
+</section>
 
-<footer id="contato"><div class="wrap">
-  <div><b>Endereço</b><span id="f-end"></span></div>
-  <div><b>Telefone</b><span id="f-tel"></span></div>
-  <div><b>Instagram</b><span id="f-ig"></span></div>
+<section class="wrap sec" id="contato">
+  <div class="eyebrow rv">Contato</div>
+  <h2 class="rv">Venha nos visitar</h2>
+  <div class="contato rv">
+    <div class="box"><h3><svg class="ic"><use href="#i-pin"/></svg>Endereço</h3><p id="c-end"></p><a class="btn line" id="c-mapa" target="_blank" rel="noopener">Como chegar</a></div>
+    <div class="box"><h3><svg class="ic"><use href="#i-clock"/></svg>Horários</h3><div id="c-hor"></div></div>
+    <div class="box"><h3><svg class="ic"><use href="#i-chat"/></svg>Fale conosco</h3><p id="c-tel"></p><a class="btn" id="c-wa" target="_blank" rel="noopener">WhatsApp</a><a class="btn line" id="c-ig" target="_blank" rel="noopener">Instagram</a></div>
+  </div>
+</section>
+
+<footer><div class="wrap">
+  <div class="brand"><img class="logo" src="logo.jpg" alt="" width="50" height="50"><span id="f-nome">Barber Shop</span></div>
+  <nav><a href="#servicos">Serviços</a><a href="#sobre">Sobre</a><a href="#contato">Contato</a></nav>
+  <span id="f-copy"></span>
 </div></footer>
+<a class="wa" id="wa-fab" target="_blank" rel="noopener" aria-label="WhatsApp"><svg class="ic"><use href="#i-chat"/></svg></a>
 
 <dialog id="dlg" aria-labelledby="dlg-t">
   <div class="dlg-h">
-    <button class="ib" id="voltar" aria-label="Voltar">‹</button>
+    <button class="ib" id="voltar" aria-label="Voltar"><svg class="ic"><use href="#i-left"/></svg></button>
     <h2 id="dlg-t">Agendar horário</h2>
-    <button class="ib" id="fechar" aria-label="Fechar">✕</button>
+    <button class="ib" id="fechar" aria-label="Fechar"><svg class="ic"><use href="#i-x"/></svg></button>
   </div>
   <div id="corpo"></div>
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
+<script src="site.js"></script>
 <script>
-const C = window.CONFIG, sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
+const C = window.CONFIG, SITE = window.SITE || {}, FOTOS = SITE.FOTOS || {};
+const sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id), TZ = 'America/Sao_Paulo';
+const ic = n => `<svg class="ic"><use href="#i-${n}"/></svg>`;
 const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
 const SEMANA = ['D','S','T','Q','Q','S','S'];
 const pad = n => String(n).padStart(2, '0');
@@ -73,24 +105,54 @@ const somaDias = (d, n) => new Date(new Date(d + 'T12:00:00-03:00').getTime() + 
 const dow = d => new Date(d + 'T12:00:00-03:00').getUTCDay();
 const fmtDia = d => new Date(d + 'T12:00:00-03:00').toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', timeZone:TZ});
 
-document.title = C.NOME; $('nome').textContent = C.NOME;
-$('f-end').textContent = C.ENDERECO || ''; $('f-tel').textContent = C.TELEFONE || ''; $('f-ig').textContent = C.INSTAGRAM || '';
+/* ---------- conteúdo do site ---------- */
+document.title = C.NOME || 'Barber Shop'; $('f-nome').textContent = C.NOME || 'Barber Shop';
+$('f-copy').textContent = `© ${new Date().getFullYear()} ${C.NOME || 'Barber Shop'}. Todos os direitos reservados.`;
+const endereco = SITE.ENDERECO || C.ENDERECO || '', tel = C.TELEFONE || '';
+$('c-end').textContent = endereco; $('c-tel').textContent = tel;
+$('c-mapa').href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(endereco);
+$('c-hor').innerHTML = (SITE.HORARIOS || []).map(h => `<p>${esc(h)}</p>`).join('');
+const wa = `https://wa.me/${SITE.WHATSAPP || ''}?text=${encodeURIComponent('Olá! Gostaria de mais informações.')}`;
+$('c-wa').href = wa; $('wa-fab').href = wa;
+$('c-ig').href = 'https://instagram.com/' + (SITE.INSTAGRAM_USER || '');
+$('sobre-t').textContent = SITE.SOBRE || '';
+if (FOTOS.hero) { const h = document.querySelector('.hero'); h.classList.add('foto'); h.style.setProperty('--hero', `url(${FOTOS.hero})`); }
+if (FOTOS.sobre) $('sobre-f').style.backgroundImage = `url(${FOTOS.sobre})`;
+if ((FOTOS.galeria || []).length) {
+  $('galeria').classList.remove('hide'); $('n-gal').classList.remove('hide');
+  $('gal').innerHTML = FOTOS.galeria.map(f => `<div class="rv" style="background-image:url('${esc(f)}')"></div>`).join('');
+}
+const topo = $('topo'); const onScroll = () => topo.classList.toggle('sc', scrollY > 30); onScroll(); addEventListener('scroll', onScroll, {passive:true});
+function reveal() {
+  const els = document.querySelectorAll('.rv:not(.in)');
+  if (!('IntersectionObserver' in window)) return els.forEach(e => e.classList.add('in'));
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.12});
+  els.forEach(e => io.observe(e));
+}
+reveal();
 
+/* ---------- agendamento (mesma lógica de antes) ---------- */
 let servicos = [], barbeiros = [], busy = [], msgErro = '';
 let st = {step:1, servico:null, dia:null, hora:null, barbeiro:null, mes:null};
 
+const icone = n => { n = n.toLowerCase(); return n.includes('barba') && n.includes('corte') ? 'comb' : n.includes('barba') ? 'razor' : 'scissors'; };
 async function init() {
   const [a, b] = await Promise.all([
     sb.from('services').select('*').eq('active', true).order('price'),
-    sb.from('barbers').select('id,name').eq('active', true).order('name')
+    sb.from('barbers').select('id,name').eq('active', true).order('ordem').order('name')
   ]);
   servicos = a.data || []; barbeiros = b.data || [];
+  if (barbeiros.length) $('st-b').textContent = barbeiros.length;
   $('cards').innerHTML = '';
   servicos.forEach(s => {
-    const c = document.createElement('button'); c.className = 'card';
-    c.innerHTML = `<i>✂️</i><b>${esc(s.name)}</b><span>A partir de <strong>${reais(s.price)}</strong><br>${s.duration_min} min</span>`;
+    const foto = (FOTOS.servicos || {})[s.name], desc = (SITE.DESCRICOES || {})[s.name] || 'Atendimento com hora marcada e acabamento preciso.';
+    const c = document.createElement('button'); c.className = 'card rv';
+    c.innerHTML = `<div class="media${foto ? '' : ' ph'}" ${foto ? `style="background-image:url('${esc(foto)}')"` : ''}>${foto ? '' : ic(icone(s.name))}</div>
+      <div class="body"><h3>${esc(s.name)}</h3><p>${esc(desc)}</p><div class="meta"><span>${ic('clock')} ${s.duration_min} min</span><strong>${reais(s.price)}</strong></div></div>`;
     c.onclick = () => abrir(s); $('cards').appendChild(c);
   });
+  $('team').innerHTML = barbeiros.map(b => { const f = (FOTOS.equipe || {})[b.name], r = (SITE.CARGOS || {})[b.name] || 'Barbeiro'; return `<div><span class="av" ${f ? `style="background-image:url('${esc(f)}')"` : ''}>${f ? '' : esc(b.name[0] || '?')}</span><span><b>${esc(b.name)}</b><span>${esc(r)}</span></span></div>`; }).join('');
+  reveal();
 }
 
 function abrir(servico) {
@@ -104,16 +166,13 @@ $('voltar').onclick = () => { if (st.step > 1 && st.step < 6) { st.step--; msgEr
 
 function resumo() {
   const p = [];
-  if (st.servico) p.push(`✂️ ${esc(st.servico.name)} · ${st.servico.duration_min} min`);
-  if (st.dia && st.step > 2) p.push(`📅 ${fmtDia(st.dia)}`);
-  if (st.hora && st.step > 3) p.push(`🕒 ${st.hora.label}`);
-  if (st.barbeiro && st.step > 4) p.push(`💈 ${esc(st.barbeiro.name)}`);
+  if (st.servico) p.push(`${ic('scissors')} ${esc(st.servico.name)} · ${st.servico.duration_min} min`);
+  if (st.dia && st.step > 2) p.push(`${ic('calendar')} ${fmtDia(st.dia)}`);
+  if (st.hora && st.step > 3) p.push(`${ic('clock')} ${st.hora.label}`);
+  if (st.barbeiro && st.step > 4) p.push(`${ic('user')} ${esc(st.barbeiro.name)}`);
   return p.length ? `<div class="resumo">${p.map(x => `<span>${x}</span>`).join('')}</div>` : '';
 }
-
-function livres(ini, fim) {   // barbeiros livres neste intervalo
-  return barbeiros.filter(b => !busy.some(r => r.barber_id === b.id && ini < r.e && fim > r.s));
-}
+function livres(ini, fim) { return barbeiros.filter(b => !busy.some(r => r.barber_id === b.id && ini < r.e && fim > r.s)); }
 function gerarSlots() {
   const [ah, am] = C.ABRE.split(':').map(Number), [fh, fm] = C.FECHA.split(':').map(Number), dur = st.servico.duration_min, out = [];
   for (let m = ah * 60 + am; m + dur <= fh * 60 + fm; m += C.PASSO_MIN) {
@@ -125,10 +184,8 @@ function gerarSlots() {
 
 function render() {
   $('voltar').disabled = st.step === 1 || st.step === 6;
-  const t = ['', 'Qual serviço?', 'Escolha o dia', 'Escolha o horário', 'Escolha o barbeiro', 'Confirmar', 'Agendado!'][st.step];
-  $('dlg-t').textContent = t;
+  $('dlg-t').textContent = ['', 'Qual serviço?', 'Escolha o dia', 'Escolha o horário', 'Escolha o barbeiro', 'Confirmar', 'Agendado'][st.step];
   let h = resumo() + (msgErro ? `<div class="msg err">${msgErro}</div>` : '');
-
   if (st.step === 1) {
     h += `<div class="opts" style="grid-template-columns:1fr">` + servicos.map(s =>
       `<button class="opt" data-serv="${s.id}">${esc(s.name)}<small>${s.duration_min} min · ${reais(s.price)}</small></button>`).join('') + `</div>`;
@@ -136,7 +193,7 @@ function render() {
   if (st.step === 2) {
     const {y, m} = st.mes, first = new Date(Date.UTC(y, m, 1)).getUTCDay(), n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
     const min = hoje(), max = somaDias(min, C.DIAS_FRENTE), mesMin = min.slice(0, 7), mesMax = max.slice(0, 7), atual = `${y}-${pad(m + 1)}`;
-    h += `<div class="cal-h"><button class="ib" data-nav="-1" aria-label="Mês anterior" ${atual <= mesMin ? 'disabled' : ''}>‹</button><b>${MESES[m]} ${y}</b><button class="ib" data-nav="1" aria-label="Próximo mês" ${atual >= mesMax ? 'disabled' : ''}>›</button></div><div class="cal-g">` +
+    h += `<div class="cal-h"><button class="ib" data-nav="-1" aria-label="Mês anterior" ${atual <= mesMin ? 'disabled' : ''}>${ic('left')}</button><b>${MESES[m]} ${y}</b><button class="ib" data-nav="1" aria-label="Próximo mês" ${atual >= mesMax ? 'disabled' : ''}>${ic('right')}</button></div><div class="cal-g">` +
       SEMANA.map(d => `<span class="dw">${d}</span>`).join('') + '<span></span>'.repeat(first);
     for (let d = 1; d <= n; d++) {
       const ds = `${atual}-${pad(d)}`, off = ds < min || ds > max || C.DIAS_FECHADOS.includes(dow(ds));
@@ -148,7 +205,7 @@ function render() {
     const sl = gerarSlots();
     if (!sl.some(s => s.ok)) h += '<p class="tag">Sem horários livres neste dia. Volte e escolha outro dia.</p>';
     else {
-      h += `<div class="relogio">🕒 <span>${st.hora ? st.hora.label : '--:--'}</span></div>`;
+      h += `<div class="relogio">${ic('clock')}<span>${st.hora ? st.hora.label : '--:--'}</span></div>`;
       [['Manhã', 0, 12], ['Tarde', 12, 18], ['Noite', 18, 24]].forEach(([nome, a, b]) => {
         const g = sl.filter(s => s.h >= a && s.h < b); if (!g.length) return;
         h += `<div class="periodo">${nome}</div><div class="slots">` + g.map(s => `<button class="opt sm" data-hora="${s.label}" ${s.ok ? '' : 'disabled'}>${s.label}</button>`).join('') + '</div>';
@@ -160,12 +217,8 @@ function render() {
     h += `<div class="opts" style="grid-template-columns:1fr">` + barbeiros.map(b =>
       `<button class="opt" data-barb="${b.id}" ${livre.has(b.id) ? '' : 'disabled'}><span class="bar"><span class="av">${esc(b.name[0])}</span><span>${esc(b.name)}<small>${livre.has(b.id) ? 'Disponível' : 'Ocupado neste horário'}</small></span></span></button>`).join('') + '</div>';
   }
-  if (st.step === 5) {
-    h += `<input id="cn" placeholder="Seu nome" autocomplete="name"><input id="ct" placeholder="WhatsApp com DDD" inputmode="tel" autocomplete="tel"><button class="btn" id="go">Confirmar agendamento</button>`;
-  }
-  if (st.step === 6) {
-    h += `<div class="big-ok"><div class="ck">✅</div><p><b>${esc(st.barbeiro.name)}</b> espera você<br>${fmtDia(st.dia)} às ${st.hora.label}.</p><button class="btn" id="ok">Fechar</button></div>`;
-  }
+  if (st.step === 5) h += `<input id="cn" placeholder="Seu nome" autocomplete="name"><input id="ct" placeholder="WhatsApp com DDD" inputmode="tel" autocomplete="tel"><button class="btn" id="go">Confirmar agendamento</button>`;
+  if (st.step === 6) h += `<div class="big-ok"><div class="ck">${ic('check')}</div><p><b>${esc(st.barbeiro.name)}</b> espera você<br>${fmtDia(st.dia)} às ${st.hora.label}.</p><button class="btn" id="ok">Fechar</button></div>`;
   $('corpo').innerHTML = h;
 }
 
@@ -190,8 +243,12 @@ $('corpo').onclick = async e => {
     const nome = $('cn').value.trim(), tel = $('ct').value.trim();
     if (nome.length < 2 || tel.replace(/\D/g, '').length < 10) { msgErro = 'Preencha seu nome e um WhatsApp com DDD.'; return render2(nome, tel); }
     b.disabled = true;
-    const {error} = await sb.rpc('book_appointment', {p_barber: st.barbeiro.id, p_service: st.servico.id, p_name: nome, p_phone: tel, p_start: st.hora.iso});
-    if (error) { msgErro = error.code === '23P01' ? 'Esse horário acabou de ser ocupado. Escolha outro.' : 'Não foi possível agendar. Tente de novo.'; return error.code === '23P01' ? carregaBusy().then(() => { msgErro = 'Esse horário acabou de ser ocupado. Escolha outro.'; render(); }) : render2(nome, tel); }
+    const {data: novoId, error} = await sb.rpc('book_appointment', {p_barber: st.barbeiro.id, p_service: st.servico.id, p_name: nome, p_phone: tel, p_start: st.hora.iso});
+    if (error) {
+      if (error.code === '23P01') { await carregaBusy(); msgErro = 'Esse horário acabou de ser ocupado. Escolha outro.'; return render(); }
+      msgErro = 'Não foi possível agendar. Tente de novo.'; return render2(nome, tel);
+    }
+    sb.functions.invoke('notify-telegram', {body: {appointment_id: novoId}}).catch(() => {});
     st.step = 6; render();
   }
 };
