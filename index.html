@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barber Shop</title>
+<link rel="icon" href="logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="top"><div class="wrap">
+  <img class="logo" src="logo.jpg" alt="Barber Shop" width="52" height="52">
+  <nav><a href="#inicio">Início</a><a href="#servicos">Serviços</a><a href="#como">Sobre</a><a href="#contato">Contato</a></nav>
+</div></div>
+
+<section class="hero" id="inicio"><div class="wrap">
+  <div class="eyebrow" id="nome">Barber Shop</div>
+  <h1>Seu estilo,<em>nosso foco.</em></h1>
+  <p>Mais que um corte, é uma experiência. Aqui o seu visual é tratado com respeito e cuidado.</p>
+  <button class="btn" style="max-width:320px;margin-bottom:28px" data-abrir>📅 Agendar agora →</button>
+  <div class="feats">
+    <div><i>✂️</i><span><b>Cortes</b>Modernos</span></div>
+    <div><i>🧔</i><span><b>Barba</b>Raspada e modelada</span></div>
+    <div><i>⭐</i><span><b>Atendimento</b>Personalizado</span></div>
+  </div>
+</div></section>
+
+<div class="wrap sec" id="servicos">
+  <div class="eyebrow">Nossos serviços</div>
+  <h2>Tudo o que você precisa para o seu visual</h2>
+  <div class="cards" id="cards"></div>
+</div>
+
+<div class="wrap sec" id="como">
+  <div class="eyebrow">Como funciona</div>
+  <h2>Agende em poucos passos</h2>
+  <div class="steps">
+    <div><em>1</em><p style="margin:0"><b>Clique em agendar</b><span>Escolha o serviço e o dia no calendário.</span></p></div>
+    <div><em>2</em><p style="margin:0"><b>Escolha o horário</b><span>Depois, o barbeiro que estiver livre.</span></p></div>
+    <div><em>3</em><p style="margin:0"><b>Pronto!</b><span>O barbeiro é avisado e é só vir.</span></p></div>
+  </div>
+</div>
+
+<footer id="contato"><div class="wrap">
+  <div><b>Endereço</b><span id="f-end"></span></div>
+  <div><b>Telefone</b><span id="f-tel"></span></div>
+  <div><b>Instagram</b><span id="f-ig"></span></div>
+</div></footer>
+
+<dialog id="dlg" aria-labelledby="dlg-t">
+  <div class="dlg-h">
+    <button class="ib" id="voltar" aria-label="Voltar">‹</button>
+    <h2 id="dlg-t">Agendar horário</h2>
+    <button class="ib" id="fechar" aria-label="Fechar">✕</button>
+  </div>
+  <div id="corpo"></div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+const C = window.CONFIG, sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id), TZ = 'America/Sao_Paulo';
+const MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+const SEMANA = ['D','S','T','Q','Q','S','S'];
+const pad = n => String(n).padStart(2, '0');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const reais = n => 'R$ ' + Number(n).toFixed(2).replace('.', ',');
+const hoje = () => new Date().toLocaleDateString('en-CA', {timeZone:TZ});
+const somaDias = (d, n) => new Date(new Date(d + 'T12:00:00-03:00').getTime() + n * 864e5).toLocaleDateString('en-CA', {timeZone:TZ});
+const dow = d => new Date(d + 'T12:00:00-03:00').getUTCDay();
+const fmtDia = d => new Date(d + 'T12:00:00-03:00').toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', timeZone:TZ});
+
+document.title = C.NOME; $('nome').textContent = C.NOME;
+$('f-end').textContent = C.ENDERECO || ''; $('f-tel').textContent = C.TELEFONE || ''; $('f-ig').textContent = C.INSTAGRAM || '';
+
+let servicos = [], barbeiros = [], busy = [], msgErro = '';
+let st = {step:1, servico:null, dia:null, hora:null, barbeiro:null, mes:null};
+
+async function init() {
+  const [a, b] = await Promise.all([
+    sb.from('services').select('*').eq('active', true).order('price'),
+    sb.from('barbers').select('id,name').eq('active', true).order('name')
+  ]);
+  servicos = a.data || []; barbeiros = b.data || [];
+  $('cards').innerHTML = '';
+  servicos.forEach(s => {
+    const c = document.createElement('button'); c.className = 'card';
+    c.innerHTML = `<i>✂️</i><b>${esc(s.name)}</b><span>A partir de <strong>${reais(s.price)}</strong><br>${s.duration_min} min</span>`;
+    c.onclick = () => abrir(s); $('cards').appendChild(c);
+  });
+}
+
+function abrir(servico) {
+  const h = hoje(); st = {step:1, servico:null, dia:null, hora:null, barbeiro:null, mes:{y:+h.slice(0,4), m:+h.slice(5,7)-1}};
+  if (servico) { st.servico = servico; st.step = 2; }
+  msgErro = ''; $('dlg').showModal(); render();
+}
+document.querySelectorAll('[data-abrir]').forEach(b => b.onclick = () => abrir());
+$('fechar').onclick = () => $('dlg').close();
+$('voltar').onclick = () => { if (st.step > 1 && st.step < 6) { st.step--; msgErro = ''; render(); } };
+
+function resumo() {
+  const p = [];
+  if (st.servico) p.push(`✂️ ${esc(st.servico.name)} · ${st.servico.duration_min} min`);
+  if (st.dia && st.step > 2) p.push(`📅 ${fmtDia(st.dia)}`);
+  if (st.hora && st.step > 3) p.push(`🕒 ${st.hora.label}`);
+  if (st.barbeiro && st.step > 4) p.push(`💈 ${esc(st.barbeiro.name)}`);
+  return p.length ? `<div class="resumo">${p.map(x => `<span>${x}</span>`).join('')}</div>` : '';
+}
+
+function livres(ini, fim) {   // barbeiros livres neste intervalo
+  return barbeiros.filter(b => !busy.some(r => r.barber_id === b.id && ini < r.e && fim > r.s));
+}
+function gerarSlots() {
+  const [ah, am] = C.ABRE.split(':').map(Number), [fh, fm] = C.FECHA.split(':').map(Number), dur = st.servico.duration_min, out = [];
+  for (let m = ah * 60 + am; m + dur <= fh * 60 + fm; m += C.PASSO_MIN) {
+    const label = `${pad(Math.floor(m / 60))}:${pad(m % 60)}`, ini = new Date(`${st.dia}T${label}:00-03:00`).getTime(), fim = ini + dur * 60000;
+    out.push({label, ini, fim, iso: new Date(ini).toISOString(), ok: ini > Date.now() && livres(ini, fim).length > 0, h: Math.floor(m / 60)});
+  }
+  return out;
+}
+
+function render() {
+  $('voltar').disabled = st.step === 1 || st.step === 6;
+  const t = ['', 'Qual serviço?', 'Escolha o dia', 'Escolha o horário', 'Escolha o barbeiro', 'Confirmar', 'Agendado!'][st.step];
+  $('dlg-t').textContent = t;
+  let h = resumo() + (msgErro ? `<div class="msg err">${msgErro}</div>` : '');
+
+  if (st.step === 1) {
+    h += `<div class="opts" style="grid-template-columns:1fr">` + servicos.map(s =>
+      `<button class="opt" data-serv="${s.id}">${esc(s.name)}<small>${s.duration_min} min · ${reais(s.price)}</small></button>`).join('') + `</div>`;
+  }
+  if (st.step === 2) {
+    const {y, m} = st.mes, first = new Date(Date.UTC(y, m, 1)).getUTCDay(), n = new Date(Date.UTC(y, m + 1, 0)).getUTCDate();
+    const min = hoje(), max = somaDias(min, C.DIAS_FRENTE), mesMin = min.slice(0, 7), mesMax = max.slice(0, 7), atual = `${y}-${pad(m + 1)}`;
+    h += `<div class="cal-h"><button class="ib" data-nav="-1" aria-label="Mês anterior" ${atual <= mesMin ? 'disabled' : ''}>‹</button><b>${MESES[m]} ${y}</b><button class="ib" data-nav="1" aria-label="Próximo mês" ${atual >= mesMax ? 'disabled' : ''}>›</button></div><div class="cal-g">` +
+      SEMANA.map(d => `<span class="dw">${d}</span>`).join('') + '<span></span>'.repeat(first);
+    for (let d = 1; d <= n; d++) {
+      const ds = `${atual}-${pad(d)}`, off = ds < min || ds > max || C.DIAS_FECHADOS.includes(dow(ds));
+      h += `<button class="day${ds === min ? ' today' : ''}" data-dia="${ds}" ${off ? 'disabled' : ''}>${d}</button>`;
+    }
+    h += '</div>';
+  }
+  if (st.step === 3) {
+    const sl = gerarSlots();
+    if (!sl.some(s => s.ok)) h += '<p class="tag">Sem horários livres neste dia. Volte e escolha outro dia.</p>';
+    else {
+      h += `<div class="relogio">🕒 <span>${st.hora ? st.hora.label : '--:--'}</span></div>`;
+      [['Manhã', 0, 12], ['Tarde', 12, 18], ['Noite', 18, 24]].forEach(([nome, a, b]) => {
+        const g = sl.filter(s => s.h >= a && s.h < b); if (!g.length) return;
+        h += `<div class="periodo">${nome}</div><div class="slots">` + g.map(s => `<button class="opt sm" data-hora="${s.label}" ${s.ok ? '' : 'disabled'}>${s.label}</button>`).join('') + '</div>';
+      });
+    }
+  }
+  if (st.step === 4) {
+    const livre = new Set(livres(st.hora.ini, st.hora.fim).map(b => b.id));
+    h += `<div class="opts" style="grid-template-columns:1fr">` + barbeiros.map(b =>
+      `<button class="opt" data-barb="${b.id}" ${livre.has(b.id) ? '' : 'disabled'}><span class="bar"><span class="av">${esc(b.name[0])}</span><span>${esc(b.name)}<small>${livre.has(b.id) ? 'Disponível' : 'Ocupado neste horário'}</small></span></span></button>`).join('') + '</div>';
+  }
+  if (st.step === 5) {
+    h += `<input id="cn" placeholder="Seu nome" autocomplete="name"><input id="ct" placeholder="WhatsApp com DDD" inputmode="tel" autocomplete="tel"><button class="btn" id="go">Confirmar agendamento</button>`;
+  }
+  if (st.step === 6) {
+    h += `<div class="big-ok"><div class="ck">✅</div><p><b>${esc(st.barbeiro.name)}</b> espera você<br>${fmtDia(st.dia)} às ${st.hora.label}.</p><button class="btn" id="ok">Fechar</button></div>`;
+  }
+  $('corpo').innerHTML = h;
+}
+
+async function carregaBusy() {
+  $('corpo').innerHTML = '<p class="tag">Carregando horários…</p>';
+  const {data, error} = await sb.rpc('get_busy_all', {p_day: st.dia});
+  if (error) { msgErro = 'Não foi possível carregar os horários. Tente de novo.'; st.step = 2; return render(); }
+  busy = (data || []).map(r => ({barber_id: r.barber_id, s: new Date(r.starts_at).getTime(), e: new Date(r.ends_at).getTime()}));
+  st.step = 3; st.hora = null; render();
+}
+
+$('corpo').onclick = async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  msgErro = '';
+  if (b.dataset.serv) { st.servico = servicos.find(s => s.id === b.dataset.serv); st.step = 2; render(); }
+  else if (b.dataset.nav) { let {y, m} = st.mes; m += +b.dataset.nav; if (m < 0) { m = 11; y--; } if (m > 11) { m = 0; y++; } st.mes = {y, m}; render(); }
+  else if (b.dataset.dia) { st.dia = b.dataset.dia; carregaBusy(); }
+  else if (b.dataset.hora) { st.hora = gerarSlots().find(s => s.label === b.dataset.hora); st.step = 4; render(); }
+  else if (b.dataset.barb) { st.barbeiro = barbeiros.find(x => x.id === b.dataset.barb); st.step = 5; render(); }
+  else if (b.id === 'ok') $('dlg').close();
+  else if (b.id === 'go') {
+    const nome = $('cn').value.trim(), tel = $('ct').value.trim();
+    if (nome.length < 2 || tel.replace(/\D/g, '').length < 10) { msgErro = 'Preencha seu nome e um WhatsApp com DDD.'; return render2(nome, tel); }
+    b.disabled = true;
+    const {error} = await sb.rpc('book_appointment', {p_barber: st.barbeiro.id, p_service: st.servico.id, p_name: nome, p_phone: tel, p_start: st.hora.iso});
+    if (error) { msgErro = error.code === '23P01' ? 'Esse horário acabou de ser ocupado. Escolha outro.' : 'Não foi possível agendar. Tente de novo.'; return error.code === '23P01' ? carregaBusy().then(() => { msgErro = 'Esse horário acabou de ser ocupado. Escolha outro.'; render(); }) : render2(nome, tel); }
+    st.step = 6; render();
+  }
+};
+function render2(n, t) { render(); $('cn').value = n; $('ct').value = t; }
+init();
+</script>
+</body>
+</html>

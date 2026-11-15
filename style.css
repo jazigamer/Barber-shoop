@@ -1,0 +1,112 @@
+:root{--bg:#0b0b0c;--card:#141416;--card2:#1a1a1d;--line:#2a2a2e;--ink:#f4f1ea;--mut:#9a9aa2;--gold:#e8a93b;--gold2:#c98d22;--red:#d64545}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Montserrat",system-ui,sans-serif}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.01em}
+a{color:var(--gold)}
+.wrap{max-width:1040px;margin:auto;padding:0 20px}
+.eyebrow{color:var(--gold);letter-spacing:.2em;font-size:.78rem;font-weight:600;text-transform:uppercase}
+.tag{font-size:.85rem;color:var(--mut)}
+.hide{display:none!important}
+
+/* topo */
+.top{position:sticky;top:0;z-index:20;background:#0b0b0cf2;border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
+.top .wrap{display:flex;align-items:center;gap:24px;height:72px}
+.logo{width:52px;height:52px;border-radius:50%;object-fit:cover;flex:none}
+.top nav{display:flex;gap:22px;margin-left:auto}
+.top nav a{color:var(--ink);text-decoration:none;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;border-bottom:2px solid transparent}
+.top nav a:hover{border-color:var(--gold)}
+@media(max-width:620px){.top nav a:not(:first-child):not(:nth-child(4)){display:none}.top nav{gap:14px}}
+
+/* hero */
+.hero{background:linear-gradient(90deg,#0b0b0c 35%,#0b0b0ccc 70%,#0b0b0c88),url(hero.jpg) center/cover,radial-gradient(circle at 80% 30%,#2a2113,#0b0b0c 60%);padding:56px 0 40px}
+.hero h1{font-size:clamp(2.2rem,8vw,3.8rem);line-height:1.02;margin:10px 0 16px}
+.hero h1 em{color:var(--gold);font-style:normal;display:block}
+.hero p{max-width:420px;color:#d8d5cd;margin:0 0 28px}
+.feats{display:flex;flex-wrap:wrap;gap:22px}
+.feats div{display:flex;gap:10px;align-items:center;font-size:.85rem;color:#d8d5cd}
+.feats b{display:block;color:var(--ink)}
+.feats i{font-style:normal;font-size:1.6rem}
+
+/* agendar */
+#agendar{margin-top:-8px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
+.panel>h2{font-size:clamp(1.4rem,5vw,1.9rem);margin:6px 0 4px}
+.panel>p{color:var(--mut);margin:0 0 6px}
+.step{margin-top:22px}
+.step h3{font-size:.8rem;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.opt{background:var(--card2);border:1.5px solid var(--line);border-radius:12px;padding:12px;text-align:left;font:inherit;font-size:.92rem;color:var(--ink);cursor:pointer}
+.opt small{display:block;color:var(--mut)}
+.opt:hover{border-color:#555}
+.opt[aria-pressed=true]{border-color:var(--gold);background:#2a2113}
+.opt[aria-pressed=true] small{color:#e8c986}
+.opt:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.opt.sm{padding:10px 4px;text-align:center}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+input{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font:inherit;background:var(--card2);color:var(--ink);margin-bottom:10px}
+input::placeholder{color:#777}
+.btn{background:var(--gold);color:#1a1205;border:0;border-radius:12px;padding:15px 18px;font:700 1rem "Montserrat",sans-serif;cursor:pointer;width:100%}
+.btn:hover{background:var(--gold2)}
+.btn:disabled{opacity:.5}
+.btn.ghost{background:none;color:var(--ink);border:1.5px solid var(--line);width:auto;padding:8px 12px;font-size:.85rem}
+.btn.ghost:hover{border-color:var(--gold);background:none}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.msg{padding:14px;border-radius:12px;margin-top:14px}
+.msg.ok{background:#17301f;border:1px solid #2c6a40}.msg.err{background:#3a1b1b;border:1px solid #7a2b2b}
+
+/* serviços */
+.sec{padding:56px 0 0}
+.sec h2{font-size:clamp(1.5rem,5vw,2.1rem);margin:6px 0 20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+.card:hover{border-color:var(--gold)}
+.card i{font-style:normal;font-size:1.6rem;display:block;margin-bottom:10px}
+.card b{display:block;margin-bottom:6px}
+.card span{color:var(--mut);font-size:.85rem}.card strong{color:var(--gold)}
+
+/* passos */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px}
+.steps div{display:flex;gap:14px}
+.steps em{flex:none;width:44px;height:44px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;color:var(--gold);font-style:normal;font-weight:800}
+.steps b{display:block}.steps span{color:var(--mut);font-size:.88rem}
+
+/* rodapé */
+footer{margin-top:64px;border-top:1px solid var(--line);padding:28px 0 40px}
+footer .wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;font-size:.9rem;color:#d8d5cd}
+footer b{display:block;color:var(--gold);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+
+/* painel do barbeiro */
+header.simple{display:flex;align-items:center;gap:16px;max-width:680px;margin:auto;padding:24px 20px 8px}
+header.simple h1{font-size:1.6rem}header.simple p{margin:2px 0 0;color:var(--mut)}
+main.simple{max-width:680px;margin:auto;padding:12px 20px 80px}
+main.simple section{margin-top:24px}
+.row{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:10px;display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.row.cancelado{opacity:.45}
+.row .t{font-weight:800;font-size:1.4rem;color:var(--gold)}
+.acts{display:flex;gap:6px}
+@media (prefers-reduced-motion:no-preference){.opt,.card,.btn{transition:background .15s,border-color .15s}}
+
+/* agendamento em janela (modal) */
+dialog{border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--ink);padding:0;width:min(460px,calc(100vw - 20px));max-height:calc(100vh - 20px);overflow:auto}
+dialog::backdrop{background:#000c}
+.dlg-h{display:flex;align-items:center;gap:8px;padding:16px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card);z-index:2}
+.dlg-h h2{font-size:1.05rem;flex:1}
+.ib{background:none;border:1.5px solid var(--line);color:var(--ink);width:38px;height:38px;border-radius:50%;font-size:1.1rem;cursor:pointer}
+.ib:hover{border-color:var(--gold)}.ib:disabled{opacity:.3;cursor:default}
+#corpo{padding:18px}
+.resumo{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.resumo span{background:#2a2113;color:#e8c986;border-radius:20px;padding:4px 10px;font-size:.78rem;font-weight:600}
+.cal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-h b{text-transform:capitalize}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.dw{text-align:center;font-size:.7rem;color:var(--mut);letter-spacing:.08em;padding-bottom:4px}
+.day{aspect-ratio:1;border:1.5px solid transparent;background:var(--card2);color:var(--ink);border-radius:10px;font:600 .95rem "Montserrat",sans-serif;cursor:pointer}
+.day:hover:not(:disabled){border-color:var(--gold)}
+.day.today{border-color:#555}
+.day:disabled{background:none;color:#555;cursor:not-allowed}
+.relogio{display:flex;align-items:center;justify-content:center;gap:10px;font-size:2.4rem;font-weight:800;color:var(--gold);margin:4px 0 14px}
+.periodo{font-size:.75rem;color:var(--mut);letter-spacing:.15em;text-transform:uppercase;margin:14px 0 8px}
+.bar{display:flex;align-items:center;gap:12px;width:100%}
+.bar .av{width:42px;height:42px;border-radius:50%;background:#2a2113;color:var(--gold);display:grid;place-items:center;font-weight:800;flex:none}
+.big-ok{text-align:center;padding:10px 0}.big-ok .ck{font-size:2.6rem}

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Painel do barbeiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="simple"><img class="logo" src="logo.jpg" alt="Barber Shop" width="96" height="96"><div><h1>Painel do barbeiro</h1><p id="quem"></p></div></header>
+<main class="simple">
+  <section id="login">
+    <input id="em" type="email" placeholder="E-mail" autocomplete="username">
+    <input id="pw" type="password" placeholder="Senha" autocomplete="current-password">
+    <button class="btn" id="entrar">Entrar</button>
+  </section>
+  <section id="painel" class="hide">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <h2>Próximos clientes</h2><button class="btn ghost" id="sair">Sair</button>
+    </div>
+    <div id="lista"></div>
+  </section>
+  <div id="msg"></div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+const C = window.CONFIG, sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id), TZ = 'America/Sao_Paulo';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let canal;
+
+async function sessao() {
+  const {data: {session}} = await sb.auth.getSession();
+  $('login').classList.toggle('hide', !!session); $('painel').classList.toggle('hide', !session);
+  if (!session) return;
+  const {data: b} = await sb.from('barbers').select('name').eq('user_id', session.user.id).maybeSingle();
+  $('quem').textContent = b ? `Olá, ${b.name}` : 'Esta conta não está ligada a nenhum barbeiro.';
+  carrega();
+  if (!canal) canal = sb.channel('ag').on('postgres_changes', {event:'*', schema:'public', table:'appointments'}, carrega).subscribe();
+}
+
+async function carrega() {
+  const desde = new Date(new Date().toLocaleDateString('en-CA', {timeZone:TZ}) + 'T00:00:00-03:00').toISOString();
+  const {data, error} = await sb.from('appointments').select('*, services(name)').gte('starts_at', desde).order('starts_at');
+  if (error) return $('lista').innerHTML = '<div class="msg err">Erro ao carregar a agenda.</div>';
+  if (!data.length) return $('lista').innerHTML = '<p class="tag">Nenhum agendamento por enquanto.</p>';
+  let dia = '';
+  $('lista').innerHTML = data.map(a => {
+    const d = new Date(a.starts_at), dd = d.toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', timeZone:TZ});
+    const h = d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', timeZone:TZ});
+    const cab = dd !== dia ? `<h3 style="margin:18px 0 8px;font-size:1rem;color:#9a9aa2">${dd}</h3>` : ''; dia = dd;
+    const tel = a.customer_phone.replace(/\D/g, '');
+    return `${cab}<div class="row ${a.status === 'cancelado' ? 'cancelado' : ''}">
+      <div><div class="t">${h}</div><strong>${esc(a.customer_name)}</strong>
+      <div class="tag">${esc(a.services?.name || '')} · <a href="https://wa.me/55${tel}" target="_blank" rel="noopener">${esc(a.customer_phone)}</a> · ${a.status}</div></div>
+      <div class="acts">${a.status === 'confirmado' ? `<button class="btn ghost" data-id="${a.id}" data-s="concluido">Concluir</button><button class="btn ghost" data-id="${a.id}" data-s="cancelado">Cancelar</button>` : ''}</div></div>`;
+  }).join('');
+}
+
+$('lista').onclick = async e => {
+  const b = e.target.closest('button[data-id]'); if (!b) return;
+  if (b.dataset.s === 'cancelado' && !confirm('Cancelar este agendamento?')) return;
+  await sb.from('appointments').update({status: b.dataset.s}).eq('id', b.dataset.id); carrega();
+};
+$('entrar').onclick = async () => {
+  const {error} = await sb.auth.signInWithPassword({email: $('em').value.trim(), password: $('pw').value});
+  $('msg').innerHTML = error ? '<div class="msg err">E-mail ou senha incorretos.</div>' : ''; if (!error) sessao();
+};
+$('sair').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+sessao();
+</script>
+</body>
+</html>
