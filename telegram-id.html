@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Descobrir o chat_id do Telegram</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;background:#0a0b0d;color:#fff;max-width:560px;margin:auto;padding:24px}input{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #333;background:#1a1d22;color:#fff;font:inherit}button{padding:12px 18px;border:0;border-radius:8px;background:#2f6fe0;color:#fff;font:600 1rem system-ui;cursor:pointer}pre{background:#1a1d22;padding:12px;border-radius:8px;white-space:pre-wrap;word-break:break-all}.tag{color:#9aa3ae;font-size:.9rem}</style></head>
+<body>
+<h1>Descobrir o chat_id</h1>
+<ol>
+<li>No Telegram, mande <b>qualquer mensagem</b> para o bot (ou escreva no grupo onde ele está).</li>
+<li>Cole o token do bot abaixo e toque em <b>Buscar</b>. O token fica só no seu navegador e não é salvo.</li>
+</ol>
+<input id="t" placeholder="Token do bot" autocomplete="off" autocapitalize="none">
+<button id="b">Buscar</button>
+<div id="o" style="margin-top:18px"></div>
+<p class="tag">Depois de usar, você pode apagar este arquivo do projeto.</p>
+<script>
+const o = document.getElementById('o');
+document.getElementById('b').onclick = async () => {
+  const t = document.getElementById('t').value.trim(); o.textContent = 'Buscando…';
+  try {
+    const r = await (await fetch(`https://api.telegram.org/bot${encodeURIComponent(t)}/getUpdates`)).json();
+    if (!r.ok) { o.textContent = 'Telegram respondeu: ' + (r.description || 'erro') + '. Confira o token.'; return; }
+    const chats = new Map();
+    r.result.forEach(u => { const c = (u.message || u.edited_message || u.channel_post || u.my_chat_member || {}).chat; if (c) chats.set(c.id, c); });
+    if (!chats.size) { o.textContent = 'Nenhuma conversa encontrada. Mande uma mensagem para o bot (ou no grupo) e toque em Buscar de novo.'; return; }
+    o.innerHTML = '';
+    chats.forEach((c, id) => {
+      const nome = c.title || [c.first_name, c.last_name].filter(Boolean).join(' ') || c.username || '';
+      const p = document.createElement('div'); p.innerHTML = '<p></p><pre></pre>';
+      p.firstChild.textContent = `${nome} (${c.type}) — chat_id: ${id}`;
+      p.lastChild.textContent = `update public.barbers set telegram_chat_id = '${id}';`;
+      o.appendChild(p);
+    });
+  } catch (e) { o.textContent = 'Não consegui consultar o Telegram daqui. Abra no navegador: https://api.telegram.org/bot<SEU_TOKEN>/getUpdates e procure "chat":{"id": ...'; }
+};
+</script></body></html>

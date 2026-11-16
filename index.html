@@ -48,6 +48,12 @@
   <div class="gal" id="gal"></div>
 </section>
 
+<section class="wrap sec hide" id="destaques">
+  <div class="eyebrow rv">No dia a dia</div>
+  <h2 class="rv">Corte e barba na prática</h2>
+  <div class="car rv" id="car" role="region" aria-roledescription="carrossel" aria-label="Fotos da barbearia"><div class="car-t" id="car-t"></div><div class="car-cap" id="car-cap"></div><div class="car-d" id="car-d"></div></div>
+</section>
+
 <section class="wrap sec" id="sobre">
   <div class="sobre">
     <div>
@@ -122,6 +128,19 @@ if ((FOTOS.galeria || []).length) {
   $('galeria').classList.remove('hide'); $('n-gal').classList.remove('hide');
   $('gal').innerHTML = FOTOS.galeria.map(f => `<div class="rv" style="background-image:url('${esc(f)}')"></div>`).join('');
 }
+(function carrossel() {
+  const itens = (FOTOS.destaques || []).map(x => typeof x === 'string' ? {foto: x, legenda: ''} : x).filter(x => x && x.foto);
+  if (!itens.length) return;
+  $('destaques').classList.remove('hide');
+  $('car-t').innerHTML = itens.map(i => `<div style="background-image:url('${esc(i.foto)}')"></div>`).join('');
+  $('car-d').innerHTML = itens.map((_, k) => `<button aria-label="Foto ${k + 1}"></button>`).join('');
+  const sl = [...$('car-t').children], dots = [...$('car-d').children]; let k = 0, tm;
+  const ir = n => { k = (n + itens.length) % itens.length; sl.forEach((e, j) => e.classList.toggle('on', j === k)); dots.forEach((e, j) => e.classList.toggle('on', j === k)); $('car-cap').textContent = itens[k].legenda || ''; };
+  const play = () => { clearInterval(tm); if (itens.length > 1 && !matchMedia('(prefers-reduced-motion:reduce)').matches) tm = setInterval(() => ir(k + 1), 5000); };
+  dots.forEach((d, j) => d.onclick = () => { ir(j); play(); });
+  $('car').onmouseenter = () => clearInterval(tm); $('car').onmouseleave = play;
+  ir(0); play();
+})();
 const topo = $('topo'); const onScroll = () => topo.classList.toggle('sc', scrollY > 30); onScroll(); addEventListener('scroll', onScroll, {passive:true});
 function reveal() {
   const els = document.querySelectorAll('.rv:not(.in)');

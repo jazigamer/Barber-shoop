@@ -153,3 +153,26 @@ main.simple section{margin-top:24px}
 .card .media.ph .ic{width:76px;height:76px;stroke-width:1.1;opacity:.75}
 .av{background-size:cover;background-position:center}
 .team div{padding:14px}
+
+/* v4: banner com mais respiro */
+.hero .wrap{width:100%}
+.hero h1{font-size:clamp(3rem,9.5vw,6.2rem);line-height:1.05;margin:24px 0 30px;letter-spacing:.03em}
+.hero p{margin-bottom:40px}
+.hero .cta{gap:14px}
+.stats{margin-top:68px}
+.hero .art{width:min(38vw,440px)}
+.pole{display:none;right:calc(max(4vw,20px) + min(38vw,440px) + 40px)}
+@media(min-width:1500px){.pole{display:block}}
+.hero.foto .pole{display:none}
+
+/* carrossel (aparece só quando houver fotos em FOTOS.destaques) */
+.car{position:relative;aspect-ratio:16/8;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:var(--g1)}
+@media(max-width:700px){.car{aspect-ratio:4/3}}
+.car-t>div{position:absolute;inset:0;background:center/cover;opacity:0;transition:opacity .9s ease}
+.car-t>div.on{opacity:1}
+.car:after{content:"";position:absolute;inset:auto 0 0;height:45%;background:linear-gradient(transparent,#000c);pointer-events:none}
+.car-cap{position:absolute;left:22px;bottom:18px;z-index:2;font:700 2rem "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.05em}
+.car-d{position:absolute;right:20px;bottom:22px;z-index:2;display:flex;gap:8px}
+.car-d button{width:10px;height:10px;border-radius:50%;border:0;background:#ffffff66;padding:0;cursor:pointer}
+.car-d button.on{background:var(--acc2);width:26px;border-radius:6px}
+@media(prefers-reduced-motion:reduce){.car-t>div{transition:none}}

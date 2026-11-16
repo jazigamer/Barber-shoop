@@ -18,7 +18,8 @@
    - Supabase → **Edge Functions → Deploy a new function → Via Editor**. Nome: `notify-telegram`. Apague o exemplo e cole o conteúdo de `supabase/functions/notify-telegram/index.ts`. Deploy.
    - Nas configurações da função, **desligue "Verify JWT"**.
    - Edge Functions → **Secrets** → adicione `TELEGRAM_BOT_TOKEN` = o token novo.
-   - **chat_id:** o jeito mais fácil é um grupo "Agenda" com os 3 barbeiros + o bot. Mande uma mensagem no grupo e abra `https://api.telegram.org/botSEU_TOKEN/getUpdates` no navegador; copie o `chat` → `id` (número negativo). Em **Table Editor → barbers**, cole esse número em `telegram_chat_id` dos três.
+   - **chat_id (fácil):** abra `/telegram-id.html` no seu site, cole o token, toque em Buscar e copie o comando `update ...` que ele mostra; rode no SQL Editor. (Veja também a opção manual abaixo.)
+   - **chat_id (manual):** o jeito mais fácil é um grupo "Agenda" com os 3 barbeiros + o bot. Mande uma mensagem no grupo e abra `https://api.telegram.org/botSEU_TOKEN/getUpdates` no navegador; copie o `chat` → `id` (número negativo). Em **Table Editor → barbers**, cole esse número em `telegram_chat_id` dos três.
    - Não precisa mais criar Database Webhook: o site avisa a função sozinho.
    - Não chegou? Edge Functions → notify-telegram → **Logs** mostra o motivo.
 

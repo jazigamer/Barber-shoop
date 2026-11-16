@@ -18,6 +18,7 @@ window.SITE = {
     sobre: "",                          // ex.: "barbearia.jpg"
     servicos: {},                       // ex.: { "Corte": "corte.jpg", "Barba": "barba.jpg" }
     equipe: {},                         // ex.: { "Gustavo": "gustavo.jpg", "Dudu": "dudu.jpg", "Breno": "breno.jpg" }
+    destaques: [],                      // carrossel (troca a cada 5 s). ex.: [{ foto: "barba1.jpg", legenda: "Barba" }, { foto: "corte1.jpg", legenda: "Corte" }]
     galeria: []                         // ex.: ["g1.jpg","g2.jpg","g3.jpg","g4.jpg","g5.jpg","g6.jpg"]
   }
 };
