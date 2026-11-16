@@ -267,7 +267,6 @@ $('corpo').onclick = async e => {
       if (error.code === '23P01') { await carregaBusy(); msgErro = 'Esse horário acabou de ser ocupado. Escolha outro.'; return render(); }
       msgErro = 'Não foi possível agendar. Tente de novo.'; return render2(nome, tel);
     }
-    sb.functions.invoke('notify-telegram', {body: {appointment_id: novoId}}).catch(() => {});
     st.step = 6; render();
   }
 };
