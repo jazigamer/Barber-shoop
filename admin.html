@@ -3,28 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
+<meta name="robots" content="noindex,nofollow">
 <title>Painel do barbeiro</title>
+<link rel="icon" href="logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="logo.jpg">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="simple"><img class="logo" src="logo.jpg" alt="Barber Shop" width="96" height="96"><div><h1>Painel do barbeiro</h1><p id="quem"></p></div></header>
+<header class="simple"><img class="logo" src="logo.jpg" alt="Barber Shop" width="50" height="50"><div><h1>Painel do barbeiro</h1><p id="quem"></p></div></header>
 <main class="simple">
   <section id="login">
-    <input id="em" type="text" placeholder="Usuário (ex.: gustavo)" autocomplete="username" autocapitalize="none" autocorrect="off">
+    <input id="em" placeholder="Usuário (ex.: gustavo)" autocomplete="username" autocapitalize="none" autocorrect="off">
     <input id="pw" type="password" placeholder="Senha" autocomplete="current-password">
     <button class="btn" id="entrar">Entrar</button>
   </section>
   <section id="painel" class="hide">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <h2>Próximos clientes</h2><button class="btn ghost" id="sair">Sair</button>
+      <h2 style="font-size:1.6rem">Próximos clientes</h2><button class="btn ghost" id="sair">Sair</button>
     </div>
     <div id="lista"></div>
   </section>
-  <div id="msg"></div>
+  <div id="msg" aria-live="polite"></div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
@@ -32,49 +32,53 @@
 const C = window.CONFIG, sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
 const $ = id => document.getElementById(id), TZ = 'America/Sao_Paulo';
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-let canal;
+let cred = null, timer = null;
+const erro = t => $('msg').innerHTML = t ? `<div class="msg err">${t}</div>` : '';
 
-async function sessao() {
-  const {data: {session}} = await sb.auth.getSession();
-  $('login').classList.toggle('hide', !!session); $('painel').classList.toggle('hide', !session);
-  if (!session) return;
-  const {data: bs} = await sb.rpc('my_barber'); const b = (bs || [])[0];
-  $('quem').textContent = b ? `Olá, ${b.name}` : 'Esta conta não está ligada a nenhum barbeiro.';
-  carrega();
-  if (!canal) canal = sb.channel('ag').on('postgres_changes', {event:'*', schema:'public', table:'appointments'}, carrega).subscribe();
-}
+function mostra(logado) { $('login').classList.toggle('hide', logado); $('painel').classList.toggle('hide', !logado); }
+function sair() { clearInterval(timer); cred = null; sessionStorage.removeItem('bs_cred'); $('quem').textContent = ''; mostra(false); }
 
 async function carrega() {
-  const desde = new Date(new Date().toLocaleDateString('en-CA', {timeZone:TZ}) + 'T00:00:00-03:00').toISOString();
-  const {data, error} = await sb.from('appointments').select('*, services(name)').gte('starts_at', desde).order('starts_at');
-  if (error) return $('lista').innerHTML = '<div class="msg err">Erro ao carregar a agenda.</div>';
-  if (!data.length) return $('lista').innerHTML = '<p class="tag">Nenhum agendamento por enquanto.</p>';
+  const {data, error} = await sb.rpc('admin_agenda', {p_nome: cred.u, p_senha: cred.p});
+  if (error) {
+    if (/inválido/i.test(error.message)) { sair(); erro('Usuário ou senha incorretos.'); }
+    else { $('lista').innerHTML = '<div class="msg err">Erro ao carregar a agenda. Tente de novo.</div>'; }
+    return false;
+  }
+  if (!data.length) { $('lista').innerHTML = '<p class="tag">Nenhum agendamento por enquanto.</p>'; return true; }
   let dia = '';
   $('lista').innerHTML = data.map(a => {
     const d = new Date(a.starts_at), dd = d.toLocaleDateString('pt-BR', {weekday:'long', day:'2-digit', month:'long', timeZone:TZ});
     const h = d.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit', timeZone:TZ});
-    const cab = dd !== dia ? `<h3 style="margin:18px 0 8px;font-size:1rem;color:#9a9aa2">${dd}</h3>` : ''; dia = dd;
+    const cab = dd !== dia ? `<h3 style="margin:18px 0 8px;font-size:1.1rem;color:#9aa3ae">${dd}</h3>` : ''; dia = dd;
     const tel = a.customer_phone.replace(/\D/g, '');
     return `${cab}<div class="row ${a.status === 'cancelado' ? 'cancelado' : ''}">
       <div><div class="t">${h}</div><strong>${esc(a.customer_name)}</strong>
-      <div class="tag">${esc(a.services?.name || '')} · <a href="https://wa.me/55${tel}" target="_blank" rel="noopener">${esc(a.customer_phone)}</a> · ${a.status}</div></div>
+      <div class="tag">${esc(a.service_name)} · <a href="https://wa.me/55${tel}" target="_blank" rel="noopener">${esc(a.customer_phone)}</a> · ${esc(a.status)}</div></div>
       <div class="acts">${a.status === 'confirmado' ? `<button class="btn ghost" data-id="${a.id}" data-s="concluido">Concluir</button><button class="btn ghost" data-id="${a.id}" data-s="cancelado">Cancelar</button>` : ''}</div></div>`;
   }).join('');
+  return true;
 }
 
+async function entrar(u, p) {
+  cred = {u: u.trim().toLowerCase(), p}; erro('');
+  if (await carrega()) {
+    sessionStorage.setItem('bs_cred', JSON.stringify(cred));
+    $('quem').textContent = 'Olá, ' + cred.u.charAt(0).toUpperCase() + cred.u.slice(1);
+    mostra(true); clearInterval(timer); timer = setInterval(carrega, 20000);
+  }
+}
+
+$('entrar').onclick = () => entrar($('em').value, $('pw').value);
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('entrar').click(); };
+$('sair').onclick = sair;
 $('lista').onclick = async e => {
   const b = e.target.closest('button[data-id]'); if (!b) return;
   if (b.dataset.s === 'cancelado' && !confirm('Cancelar este agendamento?')) return;
-  await sb.from('appointments').update({status: b.dataset.s}).eq('id', b.dataset.id); carrega();
+  await sb.rpc('admin_status', {p_nome: cred.u, p_senha: cred.p, p_id: b.dataset.id, p_status: b.dataset.s});
+  carrega();
 };
-$('entrar').onclick = async () => {
-  let u = $('em').value.trim().toLowerCase();
-  if (!u.includes('@') && C.ADMIN_EMAIL_BASE) { const [l, d] = C.ADMIN_EMAIL_BASE.split('@'); u = `${l}+${u}@${d}`; }
-  const {error} = await sb.auth.signInWithPassword({email: u, password: $('pw').value});
-  $('msg').innerHTML = error ? '<div class="msg err">E-mail ou senha incorretos.</div>' : ''; if (!error) sessao();
-};
-$('sair').onclick = async () => { await sb.auth.signOut(); location.reload(); };
-sessao();
+try { const s = JSON.parse(sessionStorage.getItem('bs_cred') || 'null'); if (s) entrar(s.u, s.p); } catch (e) {}
 </script>
 </body>
 </html>
